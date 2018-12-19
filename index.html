@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>Интернет - тестирование</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <link rel="stylesheet" type="text/css" href="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/test_screen.css">
+        <link rel="stylesheet" type="text/css" href="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/featherlight.css">
+
+            <link type="text/css" href="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/training.css" rel="stylesheet">
+
+        <!--[if IE]>
+            <style type="text/css">
+                #topLine {width: 100%;}
+                #headerLineBlock {margin-right: 4px; }
+                #taskText, #answersVariants {margin-bottom: 0;}
+            </style>
+        <![endif]-->
+
+        <!--[if lte IE 8]>
+            <style type="text/css">
+                .answerOptions td{
+                    width: 1% !important;
+                }
+            </style>
+        <![endif]-->
+        
+        <script type="text/javascript" src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/jsnlog.js"></script>
+        <script type="text/javascript">
+            window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
+                if (errorMsg === 'Script error.') {
+                    return true;
+                }
+
+                JL.setOptions({
+                    level: 6000,
+                    defaultAjaxUrl: '/jsnlog.php'
+                });
+                JL('onerrorLogger').fatalException({
+                    msg: 'Exception!',
+                    errorMsg: errorMsg,
+                    url: url,
+                    'line number': lineNumber,
+                    column: column,
+                    location: window.location.href,
+                    html: url.indexOf('.js') > 0 ? undefined : document.documentElement.outerHTML,
+                    scripts: Object.values($('script').map(function () { return $(this).html(); })).join('\n-----------------------------\n')
+                }, errorObj);
+
+                return false;
+            };
+        </script>        
+    </head>
+    <body>
+        <div id="splashScreen" style="opacity: 0; display: none;">&nbsp;</div>
+        <div id="splashScreenLoader" style="display: none;">
+            <h3>Загрузка...</h3>
+        </div>
+
+        <div id="confirmTestEndWindow" class="b-window b-window-notice">
+            <div class="b-window-content">
+                <h4>Подтверждение</h4>
+                <p>Вы уверены, что хотите завершить тестирование?</p>
+                <div class="b-testwindow-ctrl">
+                <div class="b-testwindow-ctrl-content">
+                    <button id="confirmTestEnd" class="btn btn-primary">Да</button>
+                    <button class="btn cancelConfirmTestEnd">Нет</button>
+                </div>
+                </div>
+            </div><!-- b-window-content -->
+            <div class="b-window-close cancelConfirmTestEnd"></div>
+        </div>
+
+        <div id="wcWindow" class="b-window b-window-notice hide">
+            <div class="b-window-content">
+                <form method="post">
+                    <h4>Подтверждение</h4>
+                    <p>                        Внимание! При выходе из аудитории задания, на которые даны <br>
+                        ответы, будут <b>заблокированы</b>, а оставшиеся <b>перегенерированы</b>. <br>
+                        Введите ключ доступа к тестированию</p>
+                    <input class="span4" name="wc_key" type="password">
+                    <div class="b-testwindow-ctrl">
+                    <div class="b-testwindow-ctrl-content">
+                        <button class="btn btn-primary" type="submit">Подтвердить</button>
+                        <a class="btn cancelWC">Отмена</a>
+                    </div>
+                    </div>
+                </form>
+            </div><!-- b-window-content -->
+            <div class="b-window-close cancelWC"></div>
+        </div>
+
+        <div id="helpWindow" class="b-window b-window-help">
+    <div class="b-window-content">
+        <h3>Помощь</h3>
+        <div class="t20 b-window-help-container">
+                        <p>Типы заданий:</p>
+            <ol>
+                <li>
+                    <b>Задание с выбором одного правильного ответа</b><br>
+                    <p>Данный тип задания предполагает выбор одного варианта ответа из
+                    предложенных нажатием левой кнопки мыши на знак
+                    <input type="radio"><label><span class="radioInput"></span></label>.</p>
+                    <div class="b-window-example">
+                        <p>Задание №3</p>
+                        <p>Одной из функций исторического знания является ...</p>
+                        <table>
+                            <tbody><tr><td style="padding: 5px 0" valign="top">
+                                <input type="radio"><label><span class="radioInput"></span>экономическая</label>
+                            </td></tr>
+                            <tr><td style="padding: 5px 0" valign="top">
+                                <input checked="checked" type="radio"><label><span class="radioInput"></span>мировоззренческая</label>
+                            </td></tr>
+                            <tr><td style="padding: 5px 0" valign="top">
+                                <input type="radio"><label><span class="radioInput"></span>управленческая</label>
+                            </td></tr>
+                            <tr><td style="padding: 5px 0" valign="top">
+                                <input type="radio"><label><span class="radioInput"></span>организационно-технологическая</label>
+                            </td></tr>
+                        </tbody></table>
+                    </div>
+                </li>
+                <li>
+                    <b>Задание с двумя и более правильными ответами</b><br>
+                    <p>Данный тип задания предполагает выбор двух и более вариантов ответа
+                    из предложенных нажатием левой кнопки мыши на знак
+                    <input type="checkbox"><label><span class="checkInput"></span></label>.</p>
+                    <div class="b-window-example">
+                        <p>Задание №6</p>
+                        <p>Компьютерные графические редакторы позволяют создавать изображения ...</p>
+                        <table>
+                            <tbody><tr><td style="padding: 5px 0" valign="top">
+                                <input type="checkbox"><label><span class="checkInput"></span>скалярные</label>
+                            </td></tr>
+                            <tr><td style="padding: 5px 0" valign="top">
+                                <input checked="checked" type="checkbox"><label><span class="checkInput"></span>векторные</label>
+                            </td></tr>
+                            <tr><td style="padding: 5px 0" valign="top">
+                                <input type="checkbox"><label><span class="checkInput"></span>градиентные</label>
+                            </td></tr>
+                            <tr><td style="padding: 5px 0" valign="top">
+                                <input checked="checked" type="checkbox"><label><span class="checkInput"></span>растровые</label>
+                            </td></tr>
+                        </tbody></table>
+                    </div>
+                </li>
+                <li>
+                    <b>Задание на установление правильной последовательности</b><br>
+                    <p>Данный тип задания предполагает указание правильной последовательности
+                    ответов (от большего к меньшему, в алфавитном, хронологическом
+                    порядке и т.п.). При первом нажатии левой кнопки мыши на знак
+                    <span style="display: inline-block; float: none;" class="sequenceInput">&nbsp;</span>
+                    появляется цифра 1, при  втором — цифра 2 и т.д. Для изменения ответа
+                    необходимо повторно нажать на знак <span class="sequenceInput" style="display: inline-block;float: none;">&nbsp;</span> .</p>
+                    <div class="b-window-example">
+                        <p>Задание №10</p>
+                        Расположите этапы реализации технологии проектной
+                        деятельности в верной последовательности.<br>
+                        <table cellspacing="5" cellpadding="5">
+                            <tbody><tr>
+                                <td style="padding: 5px 0" valign="top">
+                                    <div class="sequenceInput highlightSequence">2</div>
+                                </td><td>
+                                    распределение задач, обсуждение методов исследования
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0" valign="top">
+                                    <div class="sequenceInput highlightSequence">4</div>
+                                </td><td>
+                                    презентация результатов проекта
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0" valign="top">
+                                    <div class="sequenceInput highlightSequence">1</div>
+                                </td><td>
+                                    выбор темы и участников проекта
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0" valign="top">
+                                    <div class="sequenceInput highlightSequence">3</div>
+                                </td><td>
+                                    самостоятельная работа участников проекта
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+                </li>
+                <li>
+                    <b>Задание на установление соответствия</b><br>
+                    <p>Данный тип задания предполагает установление соответствия между
+                        элементами двух множеств, при этом каждому элементу первого
+                        множества соответствует только один элемент второго множества.</p>
+                    <p><b>a) без применения технологии "Drag and drop"</b></p>
+                    <p>При первом нажатии левой кнопки мыши на знак
+                        <span style="display: inline-block; float: none;" class="sequenceInput">&nbsp;</span>
+                        появляется цифра 1, при втором — цифра 2 и т.д. Для изменения
+                        ответа необходимо повторно нажать на знак
+                        <span style="display: inline-block; float: none;" class="sequenceInput">&nbsp;</span>
+                        с цифрой 1. Варианты ответов на задание также включают неверный(-ые) ответ(-ы).
+                    </p>
+
+                    <div class="b-window-example">
+                        <p>Задание №15</p>
+                        Установите соответствие между типами цветовых моделей и их
+                        цветовыми компонентами.<br>
+                        1. Цветовая модель RGB<br>
+                        2. Цветовая модель CMYK<br>
+                        3. Цветовая модель HSB<br><br>
+                        <table cellspacing="5" cellpadding="5">
+                        <tbody><tr>
+                            <td style="padding: 5px 0" valign="top">
+                                <div class="sequenceInput highlightSequence">2</div>
+                            </td><td>
+                                голубой, малиновый, желтый, черный
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0" valign="top">
+                                <div class="sequenceInput highlightSequence">1</div>
+                            </td><td>
+                                красный, зеленый, синий
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0" valign="top">
+                                <div class="sequenceInput highlightSequence">3</div>
+                            </td><td>
+                                оттенок цвета, насыщенность цвета, яркость цвета
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0" valign="top">
+                                <div class="sequenceInput highlightSequence">&nbsp;</div>
+                            </td><td>
+                                красный, желтый, фиолетовый, черный
+                            </td>
+                        </tr>
+                        </tbody></table>
+                    </div>
+
+                    <p><b>b) c применением технологии "Drag and drop"</b></p>
+                    <p>
+                        Нажать левой кнопкой мыши на нужный вариант ответа и, удерживая левую кнопку мыши,
+                        переместить его в соответствующее поле левой части окна. Для возвращения
+                        вариантов ответа в исходное состояние нажмите кнопку "Сбросить".
+                    </p>
+                    <div class="b-window-example">
+                        <p>Задание №11</p>
+                        Установите соответствие между видами фундаментальных
+                        взаимодействий и радиусами (в м) их действия.
+                        <img src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/drag_and_drop.png">
+                    </div>
+                </li>
+                <li>
+                    <b>Задание с кратким ответом</b><br>
+                    <p>Данный тип задания предполагает ввод с клавиатуры краткого ответа
+                    (в виде целого числа, нескольких целых чисел через запятую,
+                    отдельного слова или последовательности слов) в поле ответов в
+                    зависимости от формулировки вопроса.</p>
+                    <div class="b-window-example">
+                        <p>Задание №15</p>
+                        <p>
+                            Для приготовления 10 л 0,1 М раствора гидроксида натрия
+                            требуется ____ г твердой щелочи (с точностью до целого значения).</p>
+                            Введите ответ:<br>
+                            <input size="40" maxlength="250" readonly="readonly" value="72" type="text">
+                    </div>
+                </li>
+            </ol>
+            <p>Навигационные кнопки</p>
+                        <ol>
+                <li><b>Для перехода между заданиями используйте панель навигации:</b>
+                    <p>
+                    </p><div class="btn-group">
+                        <button class="btn btn-mini">1</button>
+                                                    <button class="btn btn-mini btn-inverse">2</button>
+                            <button class="btn btn-mini active">3</button>
+                                            </div> — переход к конкретному заданию<p></p>
+                    <p><a href="javascript:;" class="btn btn-primary"><i class="icon-chevron-left icon-white"></i> Предыдущее</a>
+                    — переход к предыдущему заданию</p>
+                    <p><a href="javascript:;" class="btn btn-primary">Следующее <i class="icon-chevron-right icon-white"></i></a>
+                    — переход к следующему заданию</p>
+                </li>
+                <li><b>
+                    Задания можно выполнять в произвольном порядке.
+                    Можно изменять ранее данные ответы.
+                </b></li><br>
+                <li><b>Цветовые обозначения кнопок с номерами заданий:</b>
+                    <p></p><div>
+                        <button class="btn btn-mini active">1</button> — текущее задание<br><br>
+                                                    <button class="btn btn-mini btn-inverse">2</button> — задание, на которое дан ответ<br><br>
+                            <button class="btn btn-mini btn-mini">3</button> — задание, на которое не дан ответ                                            </div><p></p>
+                </li>
+                <li><b>
+                    По окончании тестирования необходимо нажать кнопку                    <p></p><div>
+                        <button class="btn btn-primary">Завершить тестирование</button>
+                    </div><p></p>
+                </b></li>
+            </ol>
+        </div>
+        <div id="helpOkButton" class="b-window-close"></div>
+    </div><!-- /b-window-content -->
+</div><!-- /b-window -->                <div id="testStructureScreen" class="b-window">
+            <div class="b-window-content">
+                <h3>Структура варианта теста</h3>
+                <div class="t20 b-window-help-container">
+                            <table class="b-resultstbl t20">
+                            <tbody><tr>
+                <td class="b-resultstbl-de">
+                    Раздел                    Линейная алгебра</td>
+            </tr>
+                            <tr><td>
+                1. 
+                <a href="javascript:;" class="item-link">                    Вычисление определителей</a>.
+            </td>
+                        </tr>
+                                <tr><td>
+                2. 
+                <a href="javascript:;" class="item-link">                    Линейные операции над матрицами</a>.
+            </td>
+                        </tr>
+                                <tr><td>
+                3. 
+                <a href="javascript:;" class="item-link">                    Умножение матриц</a>.
+            </td>
+                        </tr>
+                                <tr><td>
+                4. 
+                <a href="javascript:;" class="item-link">                    Обратная матрица</a>.
+            </td>
+                        </tr>
+                                <tr><td>
+                5. 
+                <a href="javascript:;" class="item-link">                    Системы линейных уравнений</a>.
+            </td>
+                        </tr>
+                                            <tr>
+                <td class="b-resultstbl-de">
+                    Раздел                    Аналитическая геометрия</td>
+            </tr>
+                            <tr><td>
+                6. 
+                <a href="javascript:;" class="item-link">                    Прямоугольные координаты на плоскости</a>.
+            </td>
+                        </tr>
+                                <tr><td>
+                7. 
+                <a href="javascript:;" class="item-link">                    Прямая на плоскости</a>.
+            </td>
+                        </tr>
+                                <tr><td>
+                8. 
+                <a href="javascript:;" class="item-link">                    Плоскость в пространстве</a>.
+            </td>
+                        </tr>
+                                <tr><td>
+                9. 
+                <a href="javascript:;" class="item-link">                    Прямая линия в пространстве</a>.
+            </td>
+                        </tr>
+                        </tbody></table>                </div>
+            </div>
+            <div id="structureCloseButton" class="b-window-close"></div>
+        </div>
+
+        <div id="content" style="height: 589px;">
+            <div id="topLine">
+                <div style="padding-left: 20px;">Интернет-тренажеры 18ps62927 <b>Бас Олег Геннадьевич</b></div>
+            </div>
+
+            <div id="mainContent">
+                <div class="hlb">
+                    <div class="lefth">
+                        <div class="littleSquare"></div>
+                                                Линейная алгебра /
+            Умножение матриц
+                                </div>
+                    <div class="righth">
+                        <button id="helpButton" class="btn btn-primary pull-right">Помощь</button>
+                    </div>
+                </div>
+
+                <div id="taskText" style="height: 489px;">
+    <div class="littleSquare"></div>
+    <div>
+        Задание № 3        
+                <a class="btn btn-mini btn-primary pull-right taskResize" style="margin: 4px 4px 0px 0px;"> <i class="icon-resize-horizontal icon-white"></i> <span id="taskResizeText">развернуть</span></a>
+            </div>
+    <div id="currentTask" class="SingleType" style="height: 431px;">
+       <div>
+           
+            
+                                                <font size="4" face="Times New Roman">Даны матрицы <img src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/74351DDCCD3963C9BFF8A81F6A07F582.png" align="MIDDLE">&nbsp;и <img src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/43DF89B1020F1A0E4A3A21242CCF0A98.png" align="MIDDLE">&nbsp;Если матрица <img src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/1F20C1906157DB2E09C1D03882ED72C0.png" align="MIDDLE">&nbsp;вырожденная, то значение </font><i><font size="4" face="Times New Roman">a</font></i><font size="4" face="Times New Roman"> &nbsp;равно&nbsp;…</font>
+                                    </div>
+    </div>
+</div>
+<div id="answersVariants" style="height: 489px;">
+            <div id="answersVariantsTop">
+            <div class="littleSquare"></div>
+            Варианты ответа        </div>
+    
+    <div class="tab-content">
+        <div id="allAnswers" class="tab-pane active" style="height: 442px;">
+            <form method="post" action="" id="answerForm">
+                    <div class="alert alert-help">
+        <i>Укажите один вариант ответа</i>    </div>
+
+                    
+    
+    <table class="answerOptions" cellspacing="5" cellpadding="5">
+
+                <tbody><tr>
+            <td style="padding: 5px 0" valign="top">
+                                <input name="answer[]" id="radio_1" value="1" type="radio">
+                <label for="radio_1"><span class="radioInput"></span>
+                                            <font size="4" face="Times New Roman">– 6</font>
+                                    </label>
+
+                            </td>
+        </tr>
+                    <tr>
+            <td style="padding: 5px 0" valign="top">
+                                <input name="answer[]" id="radio_2" value="2" type="radio">
+                <label for="radio_2"><span class="radioInput"></span>
+                                            <font size="4" face="Times New Roman">– 5</font>
+                                    </label>
+
+                            </td>
+        </tr>
+                    <tr>
+            <td style="padding: 5px 0" valign="top">
+                                <input name="answer[]" id="radio_3" value="3" type="radio">
+                <label for="radio_3"><span class="radioInput"></span>
+                                            <font size="4" face="Times New Roman">0</font>
+                                    </label>
+
+                            </td>
+        </tr>
+                    <tr>
+            <td style="padding: 5px 0" valign="top">
+                                <input name="answer[]" id="radio_4" value="4" type="radio">
+                <label for="radio_4"><span class="radioInput"></span>
+                                            <font size="4" face="Times New Roman">5</font>
+                                    </label>
+
+                            </td>
+        </tr>
+            
+    </tbody></table>
+
+                                    <div id="nextButtonInAnswers" class="nextButton hidden">
+                        <a href="javascript:;" class="btn btn-primary">Следующее <i class="icon-chevron-right icon-white"></i></a>
+                    </div>
+                
+                <input name="goToItem" id="goToItem" value="4" type="hidden">
+                <input name="awayTime" id="awayTime" value="4" type="hidden">
+                <input name="outGoingCount" id="outGoingCount" value="1" type="hidden">
+                <input name="currentItemIndex" id="currentItemIndex" value="3" type="hidden">
+                <input name="currentItemType" id="currentItemType" value="SingleType" type="hidden">
+                <input name="timeInSec" id="timeInSec" value="3355" type="hidden">
+                <input name="showTime" id="showTime" value="1" type="hidden">
+                <input name="screen" id="screen" value="test" type="hidden">
+            </form>
+        </div>
+            
+                
+        </div>
+</div>
+
+
+            </div>
+        </div>
+
+        
+    <div id="footerNavigation">
+        <div id="firstBlock">
+            <a href="javascript:;" class="prevButton btn btn-primary"><i class="icon-chevron-left icon-white"></i> Предыдущее</a>
+            <a href="javascript:;" class="nextButton btn btn-primary">Следующее <i class="icon-chevron-right icon-white"></i></a>
+            <div id="tasksCount" class="informDivs">
+                Заданий: <b>9</b>
+            </div>
+
+            <div id="givenAnswers" class="informDivs">
+                Дано ответов: <b>0</b>
+            </div>
+
+            <div id="clocksDiv" class="informDivs"> 55:55 </div>
+
+            <a id="clockImage" class="btn" href="javascript:;"><i class="icon-time"></i></a>
+
+            <div class="pull-right tr-buttons">
+                <button id="testStructureButton" class="btn">Структура теста</button>
+                <button id="resultsButton" class="btn btn-primary">Завершить тестирование</button>
+            </div>
+        </div>
+        <div id="itemButtons">
+            <button class="btn btn-mini " tabindex="1">1</button><button class="btn btn-mini " tabindex="2">2</button><button class="btn btn-mini active" tabindex="3">3</button><button class="btn btn-mini " tabindex="4">4</button><button class="btn btn-mini " tabindex="5">5</button><button class="btn btn-mini " tabindex="6">6</button><button class="btn btn-mini " tabindex="7">7</button><button class="btn btn-mini " tabindex="8">8</button><button class="btn btn-mini " tabindex="9">9</button>        </div>
+    </div>
+
+        <div id="footer">
+            © НИИ мониторинга качества образования, 2008-2018
+            <iframe id="ifr" sandbox="allow-same-origin" style="display: none"></iframe>
+        </div>
+        <script type="text/javascript" src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/underscore-min.js"></script>
+        <script src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/jquery-2.js" type="text/javascript"></script>
+        <script src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/bootstrap.js" type="text/javascript"></script>
+        <script src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/featherlight.js" type="text/javascript"></script>
+        
+        
+        <script src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/video_like.js" type="text/javascript"></script>
+        <script src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/php.js" type="text/javascript"></script>
+        <script src="%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%20-%20%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_files/test.js" type="text/javascript"></script>
+        
+
+            
+
+</body></html>
